@@ -4,22 +4,42 @@ import * as fs from "fs";
 const hre = require('hardhat');
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  const [owner] = await ethers.getSigners();
+  // const whiteList = await ethers.getContractFactory("WhiteList");
+  // const WhiteList = await whiteList.deploy();
+  //
+  // await WhiteList.deployed();
+  //
+  // console.log(`address - ${WhiteList.address}`);
+  //
+  // saveFrontendFiles({
+  //   WhiteList:WhiteList
+  // });
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
 
-  await lock.deployed();
+  const users = [
+     '0xd70892e3EE08C34bE72AD99f4391F92c617D1E9a',
+     '0xD3294395bA02e90895265555Dc831b4b163A7C45',
+     '0xC1F93c680bCB1d30e92Aa587A9E7b5dFC6999379',
+     '0x61bAb6d92B2D51bff6eC57053FebDAdE837dc630',
+     '0x61bAb6d92B2D51bff6eC57053FebDAdE837dc630',
+     '0x39fDFBE7294BeF7B2e3a3FcB9786120793cF94A0',
+  ]
 
-  console.log(`address - ${lock.address}`);
+  const signers:Record<string, string> = {}
 
-  saveFrontendFiles({
-    Lock:lock
-  })
+
+  for await (const contents of
+     users.map(async (account:string) => {
+       const dataHash = ethers.utils.id(account.toLowerCase())
+       const messageBytes = ethers.utils.arrayify(dataHash)
+
+       signers[account.toLowerCase()] = await owner.signMessage(messageBytes)
+     })
+  )
+
+   fs.writeFile('../src/shared/lib/contracts/signature.json', JSON.stringify(signers), 'utf8', () => {});
 }
 
 main().catch((error) => {

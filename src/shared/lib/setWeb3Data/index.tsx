@@ -1,10 +1,10 @@
-import {useAppDispatch} from "../../../app/model/hooks";
-import {useCallback, useEffect} from "react";
+import {useAppDispatch} from "app/model/hooks";
+import {useCallback} from "react";
 import {ethers} from "ethers";
-import LockAddress from "../contracts/Lock-contract-address.json";
-import Lock from "../contracts/Lock.json";
+import WhiteListAddress from "../contracts/WhiteList-contract-address.json";
+import WhiteList from "../contracts/WhiteList.json";
 import {blockChainState} from "../../config/type";
-import {setFullSettings} from "../../../app/model/slice/blockChain";
+import {setFullSettings} from "app/model/slice/blockChain";
 import {CHAIN_ID_NUMBER} from "../../config";
 
 export const useSetWeb3Data = () => {
@@ -18,7 +18,7 @@ export const useSetWeb3Data = () => {
       if(accounts.length > 0 && chaiId === CHAIN_ID_NUMBER) {
          const provider = new ethers.providers.Web3Provider(ethereum);
          const signer = provider.getSigner();
-         const Contract = new ethers.Contract(LockAddress.Lock, Lock.abi, provider);
+         const Contract = new ethers.Contract(WhiteListAddress.WhiteList, WhiteList.abi, provider);
          const balance = +(ethers.utils.formatEther(await provider.getBalance(accounts[0])))
 
          const info:blockChainState = {

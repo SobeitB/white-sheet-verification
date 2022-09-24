@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
+    "typeRoots":[
+      './src/shared/config/wl.d.ts'
+    ],
     "target": "es5",
     "lib": [
       "dom",

@@ -16,5 +16,8 @@
     "i": "^0.3.7",
     "npm": "^8.18.0",
     "solidity-coverage": "^0.7.21"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.0-rc.1"
   }
 }
